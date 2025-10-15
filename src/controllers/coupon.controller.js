@@ -85,11 +85,10 @@ export const getApplicableCoupons = async (req, res) => {
       for (const coupon of coupons) {
         const { type, details } = coupon;
         let discount = 0;
-
-        if (isCouponExpired(coupon)) {
-            continue; // skip expired coupons in applicable list
-          }
   
+        if (isCouponExpired(coupon)) {
+            continue;
+        }
         switch (type) {
           case "cart-wise": {
             const cartTotal = calculateCartTotal(cart);
@@ -203,6 +202,10 @@ export const applyCouponToCart = async (req, res) => {
   
       const coupon = await Coupon.findById(couponId);
       if (!coupon) return res.status(404).json({ message: "Coupon not found" });
+
+      if (isCouponExpired(coupon)) {
+        return res.status(400).json({ message: "Coupon is expired" });
+    }
   
       let updatedCart = JSON.parse(JSON.stringify(cart)); // deep copy
       let totalDiscount = 0;
@@ -244,10 +247,6 @@ export const applyCouponToCart = async (req, res) => {
           let totalBuyQty = 0;
   
           for (const b of buy_products) {
-            if (isCouponExpired(coupon)) {
-              return res.status(400).json({ message: "Coupon is expired" });
-            }
-
             const item = updatedCart.items.find(
               (i) => i.product_id === b.product_id
             );
@@ -265,9 +264,6 @@ export const applyCouponToCart = async (req, res) => {
   
           if (repeat > 0) {
             for (const g of get_products) {
-              if (isCouponExpired(coupon)) {
-                return res.status(400).json({ message: "Coupon is expired" });
-              }
               const existing = updatedCart.items.find(
                 (i) => i.product_id === g.product_id
               );
@@ -335,7 +331,20 @@ const calculateCartTotal = (cart) => {
     return cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
   
-const isCouponExpired = (coupon) => {
-  if (!coupon.expiration_date) return false;
-  return new Date(coupon.expiration_date) < new Date();
-};
+  const isCouponExpired = (coupon) => {
+    if (!coupon.expiration_date) return false;
+  
+    const now = new Date();
+    const expiry = new Date(coupon.expiration_date);
+  
+    console.log("Checking expiration:", {
+      now: now.toISOString(),
+      expiry: expiry.toISOString(),
+      expired: expiry < now,
+    });
+  
+    return expiry < now;
+  };
+  
+  
+  
