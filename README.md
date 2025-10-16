@@ -56,9 +56,10 @@ assignment_monk_commerce/
 ### Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/monk-commerce-coupons.git
+git clone https://github.com/sahelipaul17/assignment_monk_commerce.git
 
 npm install 
+```
 
 create .env file and add the following variables
 
@@ -69,6 +70,7 @@ npm run dev
 
 Server runs by default on:
 http://localhost:your_port
+
 
 
 ## API Endpoints
@@ -119,6 +121,7 @@ npm test
 ✓ should skip expired coupons in applicable list
 ✓ should reject applying an expired coupon
 
+```
 
 ## Error Handling
 
