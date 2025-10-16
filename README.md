@@ -71,9 +71,9 @@ Server runs by default on:
 http://localhost:your_port
 
 
-### API Endpoints
+## API Endpoints
 
-Coupon CRUD
+### Coupon CRUD
 
 
 Method	     Endpoint	                     Description
@@ -95,7 +95,7 @@ POST	     /api/coupons/apply-coupon/:id	 Apply the selected coupon and return up
 
 
 
-### Running Tests
+## Running Tests
 
 The project includes unit tests for:
 
@@ -120,7 +120,7 @@ npm test
 ✓ should reject applying an expired coupon
 
 
-### Error Handling
+## Error Handling
 
 ### All routes include proper error handling:
 
